@@ -5,8 +5,6 @@ import { Home, Truck, ParkingCircle, ClipboardList } from "lucide-react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "./layouts/sidebar"; // Change to sidebar layout
 import Index from "./pages/Index.jsx";
-import Trailers from "./pages/Trailers.jsx";
-import ParkingSpaces from "./pages/ParkingSpaces.jsx";
 import Orders from "./pages/Orders.jsx";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -46,8 +44,6 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<Index />} />
-                <Route path="trailers" element={<Trailers />} />
-                <Route path="parking-spaces" element={<ParkingSpaces />} />
                 <Route path="orders" element={<Orders />} />
               </Route>
             </Routes>
