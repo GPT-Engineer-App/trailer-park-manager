@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import ParkingMap from "@/components/ParkingMap";
 
 const ParkingSpaces = () => {
+  const [trailerPositions, setTrailerPositions] = useState({});
+
+  const handleDropTrailer = (trailerId, spaceIndex) => {
+    setTrailerPositions((prevPositions) => ({
+      ...prevPositions,
+      [trailerId]: spaceIndex,
+    }));
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Parking Spaces</h1>
-      <ParkingMap />
+      <ParkingMap onDropTrailer={handleDropTrailer} />
       <div className="grid grid-cols-1 gap-4">
         {/* Placeholder for parking spaces list */}
         <div className="bg-white p-4 rounded shadow">

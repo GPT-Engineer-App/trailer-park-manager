@@ -8,6 +8,8 @@ import Index from "./pages/Index.jsx";
 import Trailers from "./pages/Trailers.jsx";
 import ParkingSpaces from "./pages/ParkingSpaces.jsx";
 import Orders from "./pages/Orders.jsx";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const queryClient = new QueryClient();
 
@@ -39,16 +41,18 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Index />} />
-              <Route path="trailers" element={<Trailers />} />
-              <Route path="parking-spaces" element={<ParkingSpaces />} />
-              <Route path="orders" element={<Orders />} />
-            </Route>
-          </Routes>
-        </Router>
+        <DndProvider backend={HTML5Backend}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Index />} />
+                <Route path="trailers" element={<Trailers />} />
+                <Route path="parking-spaces" element={<ParkingSpaces />} />
+                <Route path="orders" element={<Orders />} />
+              </Route>
+            </Routes>
+          </Router>
+        </DndProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
