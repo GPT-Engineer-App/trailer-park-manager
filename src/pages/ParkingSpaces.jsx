@@ -1,9 +1,11 @@
 import React from "react";
+import ParkingMap from "@/components/ParkingMap";
 
 const ParkingSpaces = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Parking Spaces</h1>
+      <ParkingMap />
       <div className="grid grid-cols-1 gap-4">
         {/* Placeholder for parking spaces list */}
         <div className="bg-white p-4 rounded shadow">
