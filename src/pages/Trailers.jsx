@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { useDrag } from "react-dnd";
 
 const Trailers = () => {
   const [trailers, setTrailers] = useState([
@@ -42,60 +43,74 @@ const Trailers = () => {
       <h1 className="text-2xl font-bold mb-4">Trailers</h1>
       <div className="grid grid-cols-1 gap-4">
         {trailers.map((trailer) => (
-          <Card key={trailer.id}>
-            <CardHeader>
-              <CardTitle>{trailer.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul>
-                {trailer.orders.map((order, index) => (
-                  <li key={index} className="flex justify-between items-center">
-                    {order}
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleRemoveOrder(trailer.id, order)}
-                    >
-                      Remove
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button onClick={() => setSelectedTrailer(trailer.id)}>
-                    Add Order
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add New Order</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Label htmlFor="newOrder">Order Name</Label>
-                    <Input
-                      id="newOrder"
-                      value={newOrder}
-                      onChange={(e) => setNewOrder(e.target.value)}
-                    />
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      onClick={() => handleAddOrder(selectedTrailer)}
-                      disabled={!newOrder}
-                    >
-                      Add
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </CardFooter>
-          </Card>
+          <DraggableTrailer key={trailer.id} trailer={trailer} onRemoveOrder={handleRemoveOrder} onAddOrder={handleAddOrder} setSelectedTrailer={setSelectedTrailer} setNewOrder={setNewOrder} newOrder={newOrder} selectedTrailer={selectedTrailer} />
         ))}
       </div>
     </div>
+  );
+};
+
+const DraggableTrailer = ({ trailer, onRemoveOrder, onAddOrder, setSelectedTrailer, setNewOrder, newOrder, selectedTrailer }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "TRAILER",
+    item: { id: trailer.id },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <Card ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
+      <CardHeader>
+        <CardTitle>{trailer.name}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul>
+          {trailer.orders.map((order, index) => (
+            <li key={index} className="flex justify-between items-center">
+              {order}
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => onRemoveOrder(trailer.id, order)}
+              >
+                Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <CardFooter>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button onClick={() => setSelectedTrailer(trailer.id)}>
+              Add Order
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Order</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Label htmlFor="newOrder">Order Name</Label>
+              <Input
+                id="newOrder"
+                value={newOrder}
+                onChange={(e) => setNewOrder(e.target.value)}
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                onClick={() => onAddOrder(selectedTrailer)}
+                disabled={!newOrder}
+              >
+                Add
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </CardFooter>
+    </Card>
   );
 };
 

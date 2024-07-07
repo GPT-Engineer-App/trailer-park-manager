@@ -1,15 +1,11 @@
 import React from "react";
+import { useDrop } from "react-dnd";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const ParkingMap = () => {
+const ParkingMap = ({ onDropTrailer }) => {
   const renderSpaces = (count) => {
     return Array.from({ length: count }, (_, index) => (
-      <div
-        key={index}
-        className="w-12 h-12 border border-gray-300 flex items-center justify-center"
-      >
-        {index + 1}
-      </div>
+      <DroppableSpace key={index} index={index} onDropTrailer={onDropTrailer} />
     ));
   };
 
@@ -29,6 +25,25 @@ const ParkingMap = () => {
         </div>
       </CardContent>
     </Card>
+  );
+};
+
+const DroppableSpace = ({ index, onDropTrailer }) => {
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: "TRAILER",
+    drop: (item) => onDropTrailer(item.id, index),
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
+
+  return (
+    <div
+      ref={drop}
+      className={`w-12 h-12 border border-gray-300 flex items-center justify-center ${isOver ? "bg-blue-200" : ""}`}
+    >
+      {index + 1}
+    </div>
   );
 };
 
